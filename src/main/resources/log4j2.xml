@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="Warn">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH.mm.ss,SSS} [%t] %-5level %logger{36}: %msg%n"/>
+        </Console>
+        <File name="File" fileName="src/main/logs/appLogs.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH.mm.ss,SSS} [%t] %-5level %logger{36}: %msg%n"/>
+        </File>
+        <RollingFile name="HippodromeRollingFile"
+                     fileName="src/main/logs/hippodrome.log"
+                     filePattern="src/main/oldLogs/hippodrome.%d{yyyy-MM-dd, HH:mm}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH.mm.ss,SSS} [%t] %-5level %logger{36}: %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="src/main/oldLogs" maxDepth="1">
+                    <IfFileName glob="hippodrome.*.log" />
+                    <IfLastModified age="7m" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="HorseRollingFile"
+                     fileName="src/main/logs/horse.log"
+                     filePattern="src/main/oldLogs/horse.%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH.mm.ss,SSS} [%t] %-5level %logger{36}: %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="src/main/oldLogs" maxDepth="1">
+                    <IfFileName glob="horse.*.log" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+        <logger name="HippodromeLogger" level="debug" additivity="true">
+            <AppenderRef ref="HippodromeRollingFile"/>
+        </logger>
+        <logger name="HorseLogger" level="debug" additivity="true">
+            <AppenderRef ref="HorseRollingFile"/>
+        </logger>
+    </Loggers>
+</Configuration>
